@@ -1,0 +1,15 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# IDE and tooling
+.vs/
+.idea/
+*.user
+*.suo
+*.DotSettings.user
+*.log
+
+# NuGet
+packages/
+*.nupkg
