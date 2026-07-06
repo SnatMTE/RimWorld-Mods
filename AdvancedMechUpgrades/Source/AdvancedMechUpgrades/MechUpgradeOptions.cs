@@ -12,7 +12,19 @@ namespace AdvancedMechUpgrades
         public ThingFilter filter;
         public int count;
 
-        public string Label => filter.Summary;
+        public string Label
+        {
+            // a filter holding one def gets that def's name, anything else falls back to the
+            // usual filter summary
+            get
+            {
+                if (filter.AllowedDefCount == 1)
+                {
+                    return filter.AnyAllowedDef.label;
+                }
+                return filter.Summary;
+            }
+        }
     }
 
     public class MechUpgradeOption
@@ -21,6 +33,7 @@ namespace AdvancedMechUpgrades
         public ThingDef advancedDef;
         public PawnKindDef advancedKind;
         public RecipeDef recipe;
+        public Texture2D icon;
     }
 
     internal static class MechUpgradeOptions
@@ -63,7 +76,8 @@ namespace AdvancedMechUpgrades
                     baseDef = baseDef,
                     advancedDef = advancedDef,
                     advancedKind = advancedKind,
-                    recipe = recipe
+                    recipe = recipe,
+                    icon = LoadIcon(advancedKind)
                 });
             }
         }
@@ -109,6 +123,23 @@ namespace AdvancedMechUpgrades
                 });
             }
             return costs;
+        }
+
+        // mech graphics hang off the first life stage, which is the only place to get a portrait
+        // from. there is no icon field to read instead, which would have been too easy
+        private static Texture2D LoadIcon(PawnKindDef kind)
+        {
+            if (kind.lifeStages.NullOrEmpty())
+            {
+                return null;
+            }
+            GraphicData graphicData = kind.lifeStages[0].bodyGraphicData;
+            if (graphicData == null || graphicData.texPath.NullOrEmpty())
+            {
+                return null;
+            }
+            return ContentFinder<Texture2D>.Get(graphicData.texPath + "_south", false)
+                ?? ContentFinder<Texture2D>.Get(graphicData.texPath, false);
         }
     }
 }
