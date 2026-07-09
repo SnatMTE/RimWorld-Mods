@@ -8,10 +8,13 @@ namespace AdvancedMechUpgrades
     {
         internal const string LogTag = "[AdvancedMechUpgrades]";
 
+        // runs once every def is in, which is the only point where other mods' advanced mechs
+        // actually exist to be found
         static AdvancedMechUpgradesMod()
         {
             new Harmony("snat.advancedmechupgrades").PatchAll();
-            Log.Message(LogTag + " Harmony patches applied.");
+            MechUpgradeOptions.Rebuild();
+            Log.Message(LogTag + " " + MechUpgradeOptions.Count + " mech upgrade paths found.");
         }
     }
 }
