@@ -125,6 +125,18 @@ namespace AdvancedMechUpgrades
             return costs;
         }
 
+        // half the time a gestator spends forming the advanced mech, which works out at a day of
+        // downtime per gestation cycle. a light mech is a day, a war queen is nearly a fortnight
+        internal static int SelfUpgradeTicks(RecipeDef recipe)
+        {
+            int total = recipe.formingTicks * recipe.gestationCycles;
+            if (total <= 0)
+            {
+                return GenDate.TicksPerDay;
+            }
+            return total / 2;
+        }
+
         // mech graphics hang off the first life stage, which is the only place to get a portrait
         // from. there is no icon field to read instead, which would have been too easy
         private static Texture2D LoadIcon(PawnKindDef kind)

@@ -8,12 +8,14 @@ namespace AdvancedMechUpgrades
 {
     internal static class MechUpgradeUtility
     {
-        // the upgrade gizmo lives in the gizmo bar. anything wrong with it comes back disabled
+        private static readonly HediffDef SelfUpgradeHediff = DefDatabase<HediffDef>.GetNamed("AMU_SelfUpgrading");
+
+        // both upgrade paths live in the gizmo bar. anything wrong with them comes back disabled
         // with every complaint stacked into the tooltip, because hiding the reason would be cruel
         public static IEnumerable<Gizmo> GetUpgradeGizmos(Pawn pawn)
         {
             if (pawn == null || !pawn.Spawned || pawn.Dead || !pawn.RaceProps.IsMechanoid || !pawn.IsColonyMech
-                || pawn.IsGestating())
+                || pawn.IsGestating() || pawn.health.hediffSet.HasHediff(SelfUpgradeHediff))
             {
                 yield break;
             }
@@ -45,6 +47,15 @@ namespace AdvancedMechUpgrades
                 command.disabledReason = string.Join("\n", problems);
             }
             yield return command;
+
+            Command_Action selfUpgrade = new Command_Action
+            {
+                defaultLabel = "AMU.SelfUpgradeLabel".Translate(option.advancedDef.label),
+                defaultDesc = BuildSelfUpgradeDescription(option),
+                icon = option.icon,
+                action = () => StartSelfUpgrade(pawn, option)
+            };
+            yield return selfUpgrade;
         }
 
         // one line per ingredient, plus a dash for the recipes that cost nothing
@@ -56,6 +67,13 @@ namespace AdvancedMechUpgrades
                 costLines = string.Join("\n", costs.Select(cost => "AMU.CostLine".Translate(cost.count, cost.Label)));
             }
             return "AMU.GizmoDesc".Translate(option.baseDef.label, option.advancedDef.label, costLines);
+        }
+
+        // the free path, which is paid for in downtime instead of steel
+        private static string BuildSelfUpgradeDescription(MechUpgradeOption option)
+        {
+            string downtime = MechUpgradeOptions.SelfUpgradeTicks(option.recipe).ToStringTicksToPeriod();
+            return "AMU.SelfUpgradeDesc".Translate(option.baseDef.label, option.advancedDef.label, downtime);
         }
 
         // counts what is sitting on the map and not forbidden to the player, then reports one
@@ -145,6 +163,40 @@ namespace AdvancedMechUpgrades
             }
 
             Consume(map, mech.PositionHeld, costs);
+            Replace(mech, option);
+        }
+
+        // shuts the mech down for a while and lets it rebuild itself, with no bill attached
+        private static void StartSelfUpgrade(Pawn mech, MechUpgradeOption option)
+        {
+            if (!mech.Spawned || mech.health.hediffSet.HasHediff(SelfUpgradeHediff))
+            {
+                return;
+            }
+
+            Hediff_SelfUpgrade hediff = (Hediff_SelfUpgrade)HediffMaker.MakeHediff(SelfUpgradeHediff, mech);
+            hediff.ticksLeft = MechUpgradeOptions.SelfUpgradeTicks(option.recipe);
+            mech.health.AddHediff(hediff);
+            SoundDefOf.MechSelfShutdown.PlayOneShot(new TargetInfo(mech.PositionHeld, mech.MapHeld));
+        }
+
+        // the shutdown hediff hands the finished build over here a tick later, which keeps the
+        // swap out of the pawn's own health tick
+        internal static void CompleteSelfUpgrade(Pawn mech)
+        {
+            if (!mech.Spawned || !mech.health.hediffSet.HasHediff(SelfUpgradeHediff))
+            {
+                return;
+            }
+
+            MechUpgradeOption option = MechUpgradeOptions.Get(mech.def);
+            if (option == null)
+            {
+                // the advanced mech vanished with a mod update, so let the poor thing wake up
+                mech.health.RemoveHediff(mech.health.hediffSet.GetFirstHediffOfDef(SelfUpgradeHediff));
+                return;
+            }
+
             Replace(mech, option);
         }
 
