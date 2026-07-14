@@ -33,6 +33,11 @@ namespace AdvancedMechUpgrades
             {
                 problems.Add("AMU.MissingResources".Translate(string.Join(", ", missing)));
             }
+            string bandwidthIssue = GetBandwidthIssue(pawn, option);
+            if (!bandwidthIssue.NullOrEmpty())
+            {
+                problems.Add(bandwidthIssue);
+            }
 
             Command_Action command = new Command_Action
             {
@@ -55,7 +60,32 @@ namespace AdvancedMechUpgrades
                 icon = option.icon,
                 action = () => StartSelfUpgrade(pawn, option)
             };
+            if (!bandwidthIssue.NullOrEmpty())
+            {
+                selfUpgrade.Disabled = true;
+                selfUpgrade.disabledReason = bandwidthIssue;
+            }
             yield return selfUpgrade;
+        }
+
+        // a bigger mech can push the mechanitor over budget, and finding that out after the
+        // resources are already gone would be a bit rude
+        private static string GetBandwidthIssue(Pawn mech, MechUpgradeOption option)
+        {
+            Pawn overseer = mech.GetOverseer();
+            if (overseer == null || overseer.mechanitor == null)
+            {
+                return null;
+            }
+
+            int oldCost = (int)mech.GetStatValue(StatDefOf.BandwidthCost);
+            int newCost = (int)option.advancedDef.GetStatValueAbstract(StatDefOf.BandwidthCost);
+            Pawn_MechanitorTracker mechanitor = overseer.mechanitor;
+            if (mechanitor.UsedBandwidthFromSubjects - oldCost + newCost <= mechanitor.TotalBandwidth)
+            {
+                return null;
+            }
+            return "AMU.NotEnoughBandwidth".Translate();
         }
 
         // one line per ingredient, plus a dash for the recipes that cost nothing
@@ -161,6 +191,12 @@ namespace AdvancedMechUpgrades
                 Messages.Message("AMU.MissingResources".Translate(string.Join(", ", missing)), mech, MessageTypeDefOf.RejectInput);
                 return;
             }
+            string bandwidthIssue = GetBandwidthIssue(mech, option);
+            if (!bandwidthIssue.NullOrEmpty())
+            {
+                Messages.Message(bandwidthIssue, mech, MessageTypeDefOf.RejectInput);
+                return;
+            }
 
             Consume(map, mech.PositionHeld, costs);
             Replace(mech, option);
@@ -171,6 +207,13 @@ namespace AdvancedMechUpgrades
         {
             if (!mech.Spawned || mech.health.hediffSet.HasHediff(SelfUpgradeHediff))
             {
+                return;
+            }
+
+            string bandwidthIssue = GetBandwidthIssue(mech, option);
+            if (!bandwidthIssue.NullOrEmpty())
+            {
+                Messages.Message(bandwidthIssue, mech, MessageTypeDefOf.RejectInput);
                 return;
             }
 
