@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>snat.archotech.unbreakable</packageId>
+  <name>Archotech: Unbreakable Implants</name>
+  <author>Snat</author>
+  <supportedVersions>
+    <li>1.7</li>
+  </supportedVersions>
+  <description>Archotech implants can never be destroyed. When damage would otherwise destroy one, its body part breaks instead and self-repair brings it back over time.</description>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+</ModMetaData>
