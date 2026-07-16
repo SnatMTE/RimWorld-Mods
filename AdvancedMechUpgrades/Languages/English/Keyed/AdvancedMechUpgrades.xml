@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AMU.GizmoLabel>Upgrade to {0}</AMU.GizmoLabel>
+  <AMU.GizmoDesc>Rebuild this {0} into a {1}.\n\nUpgrading costs half of the resources needed to gestate a new {1}:\n{2}</AMU.GizmoDesc>
+  <AMU.CostLine>    {0}x {1}</AMU.CostLine>
+  <AMU.MissingResources>Not enough resources to upgrade: {0}</AMU.MissingResources>
+  <AMU.NotEnoughBandwidth>Not enough mechanitor bandwidth to control the upgraded mech.</AMU.NotEnoughBandwidth>
+  <AMU.MissingEntry>{0}x {1}</AMU.MissingEntry>
+  <AMU.UpgradeComplete>{0} was upgraded to a {1}.</AMU.UpgradeComplete>
+  <AMU.SelfUpgradeLabel>Self-upgrade to {0}</AMU.SelfUpgradeLabel>
+  <AMU.SelfUpgradeDesc>Rebuild this {0} into a {1} without spending any resources.\n\nThe mech shuts itself down for {2} while it rebuilds itself, and cannot be used until it restarts.</AMU.SelfUpgradeDesc>
+  <AMU.SelfUpgradeHediffTip>Shut down while it rebuilds itself. {0} remaining.</AMU.SelfUpgradeHediffTip>
+</LanguageData>
