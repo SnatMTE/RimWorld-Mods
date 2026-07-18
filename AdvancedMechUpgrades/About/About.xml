@@ -6,7 +6,15 @@
   <supportedVersions>
     <li>1.7</li>
   </supportedVersions>
-  <description>Lets colony mechanoids be upgraded into their advanced variants once the research for the advanced model is finished.</description>
+  <description>Lets colony mechanoids be upgraded into their "Advanced" variants.
+
+Once the research for an advanced variant is finished, the regular mech gains an upgrade gizmo. Upgrading consumes half of the resources needed to gestate a new advanced mech (rounded up to whole items), taken from anywhere on the mech's map, and rebuilds the mech in place, fully repaired. The new mech keeps the old one's name, charge level, drafted state and mechanitor control group. No mech gestator is required.
+
+A second gizmo lets the mech upgrade itself instead. It spends no resources, but shuts itself down for half the time a gestator would need to form the advanced model, and cannot be used until the rebuild finishes.
+
+Works with any mod that follows the vanilla naming pattern of an advanced variant (Mech_AdvancedX) for the base mech (Mech_X), such as Advanced Mechanoids by Sobb.
+
+Requires Biotech and Harmony.</description>
   <modDependencies>
     <li>
       <packageId>Ludeon.RimWorld.Biotech</packageId>
