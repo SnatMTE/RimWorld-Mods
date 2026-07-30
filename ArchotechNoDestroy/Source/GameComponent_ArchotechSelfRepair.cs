@@ -17,22 +17,29 @@ namespace ArchotechNoDestroy
         }
 
         // called on every tick, but the modulo keeps the actual healing down to once every five
-        // seconds
+        // seconds. the try/catch is there because a component that throws takes the tick manager
+        // with it, and then the colony stops
         public override void GameComponentTick()
         {
             if (Find.TickManager.TicksGame % RepairIntervalTicks != 0)
             {
                 return;
             }
-
-            List<Map> maps = Find.Maps;
-            for (int i = 0; i < maps.Count; i++)
+            try
             {
-                IReadOnlyList<Pawn> pawns = maps[i].mapPawns.AllPawnsSpawned;
-                for (int j = 0; j < pawns.Count; j++)
+                List<Map> maps = Find.Maps;
+                for (int i = 0; i < maps.Count; i++)
                 {
-                    RepairPawn(pawns[j]);
+                    IReadOnlyList<Pawn> pawns = maps[i].mapPawns.AllPawnsSpawned;
+                    for (int j = 0; j < pawns.Count; j++)
+                    {
+                        RepairPawn(pawns[j]);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorOnce(ArchotechNoDestroyMod.LogTag + " error in self-repair tick: " + ex, 7263182);
             }
         }
 
