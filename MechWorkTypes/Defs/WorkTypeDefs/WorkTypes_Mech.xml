@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- Repairing damaged mechanoids (vanilla WorkGiverDef RepairMech). -->
+  <WorkTypeDef>
+    <defName>MechRepair</defName>
+    <labelShort>mech repair</labelShort>
+    <pawnLabel>Mech repairer</pawnLabel>
+    <gerundLabel>repairing mechs</gerundLabel>
+    <description>Repair damaged mechanoids. Only mechanitors can do this work.</description>
+    <verb>Repair</verb>
+    <naturalPriority>468</naturalPriority>
+    <alwaysStartActive>true</alwaysStartActive>
+    <relevantSkills>
+      <li>Crafting</li>
+    </relevantSkills>
+    <workTags>
+      <li>Crafting</li>
+      <li>ManualSkilled</li>
+      <li>Commoner</li>
+      <li>AllWork</li>
+    </workTags>
+  </WorkTypeDef>
+
+</Defs>

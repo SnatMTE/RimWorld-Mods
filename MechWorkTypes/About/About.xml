@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>snat.mechworktypes</packageId>
+  <name>Mech Work Types</name>
+  <author>Snat</author>
+  <supportedVersions>
+    <li>1.6</li>
+    <li>1.7</li>
+  </supportedVersions>
+  <description>Moves the mech-related jobs that are normally performed under the Smithing work type into their own dedicated work types.</description>
+  <modDependencies>
+    <li>
+      <packageId>Ludeon.RimWorld.Biotech</packageId>
+      <displayName>Biotech</displayName>
+    </li>
+  </modDependencies>
+</ModMetaData>
