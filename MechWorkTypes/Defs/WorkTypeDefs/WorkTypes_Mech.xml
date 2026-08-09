@@ -22,4 +22,25 @@
     </workTags>
   </WorkTypeDef>
 
+  <!-- Gestating and resurrecting mechanoids at mech gestators (vanilla WorkGiverDef DoBillsMechGestator). -->
+  <WorkTypeDef>
+    <defName>MechBirthing</defName>
+    <labelShort>mech birth</labelShort>
+    <pawnLabel>Mech birther</pawnLabel>
+    <gerundLabel>birthing mechs</gerundLabel>
+    <description>Gestate new mechanoids and resurrect dead ones at mech gestators. Only mechanitors can do this work.</description>
+    <verb>Birth</verb>
+    <naturalPriority>466</naturalPriority>
+    <alwaysStartActive>true</alwaysStartActive>
+    <relevantSkills>
+      <li>Crafting</li>
+    </relevantSkills>
+    <workTags>
+      <li>Crafting</li>
+      <li>ManualSkilled</li>
+      <li>Commoner</li>
+      <li>AllWork</li>
+    </workTags>
+  </WorkTypeDef>
+
 </Defs>

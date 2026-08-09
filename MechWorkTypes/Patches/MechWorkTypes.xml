@@ -9,4 +9,12 @@
     </value>
   </Operation>
 
+  <!-- Mech gestation and resurrection bills at mech gestators: move off Smithing. -->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/WorkGiverDef[defName="DoBillsMechGestator"]/workType</xpath>
+    <value>
+      <workType>MechBirthing</workType>
+    </value>
+  </Operation>
+
 </Patch>
