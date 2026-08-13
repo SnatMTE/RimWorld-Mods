@@ -43,4 +43,25 @@
     </workTags>
   </WorkTypeDef>
 
+  <!-- Encoding subcores at the subcore encoder (vanilla WorkGiverDef DoBillsSubcoreEncoder). -->
+  <WorkTypeDef>
+    <defName>SubcoreEncoding</defName>
+    <labelShort>subcores</labelShort>
+    <pawnLabel>Subcore encoder</pawnLabel>
+    <gerundLabel>encoding subcores</gerundLabel>
+    <description>Encode subcores at the subcore encoder. Only mechanitors can do this work.</description>
+    <verb>Encode</verb>
+    <naturalPriority>464</naturalPriority>
+    <alwaysStartActive>true</alwaysStartActive>
+    <relevantSkills>
+      <li>Crafting</li>
+    </relevantSkills>
+    <workTags>
+      <li>Crafting</li>
+      <li>ManualSkilled</li>
+      <li>Commoner</li>
+      <li>AllWork</li>
+    </workTags>
+  </WorkTypeDef>
+
 </Defs>

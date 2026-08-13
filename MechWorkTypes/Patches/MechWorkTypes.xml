@@ -17,4 +17,12 @@
     </value>
   </Operation>
 
+  <!-- Subcore encoding: move off Smithing. -->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/WorkGiverDef[defName="DoBillsSubcoreEncoder"]/workType</xpath>
+    <value>
+      <workType>SubcoreEncoding</workType>
+    </value>
+  </Operation>
+
 </Patch>
