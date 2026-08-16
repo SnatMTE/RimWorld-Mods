@@ -7,7 +7,15 @@
     <li>1.6</li>
     <li>1.7</li>
   </supportedVersions>
-  <description>Moves the mech-related jobs that are normally performed under the Smithing work type into their own dedicated work types.</description>
+  <description>Moves the mech-related jobs that are normally performed under the Smithing work type into their own dedicated work types.
+
+- Mech repair: repair damaged mechanoids (mechanitors only)
+- Mech birthing: gestate new mechanoids and resurrect dead ones at mech gestators and large mech gestators (mechanitors only)
+- Subcores: encode subcores at the subcore encoder (mechanitors only)
+
+Note: when this mod is added to an existing save, the new work types are disabled for existing pawns. Enable them in the Work tab for your mechanitor(s).
+
+Requires the Biotech DLC.</description>
   <modDependencies>
     <li>
       <packageId>Ludeon.RimWorld.Biotech</packageId>
