@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Quarry Drone Patch</name>
+	<author>Snat</author>
+	<packageId>quarrydrone.patch</packageId>
+	<supportedVersions>
+		<li>1.6</li>
+		<li>1.7</li>
+	</supportedVersions>
+	<modDependencies>
+		<li>
+			<packageId>Ogliss.TheWhiteCrayon.Quarry</packageId>
+			<displayName>Quarry [Adopted]</displayName>
+		</li>
+		<li>
+			<packageId>vanillaquestsexpanded.dronefactory</packageId>
+			<displayName>Vanilla Quests Expanded - Drone Factory</displayName>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>Ogliss.TheWhiteCrayon.Quarry</li>
+		<li>vanillaquestsexpanded.dronefactory</li>
+	</loadAfter>
+</ModMetaData>
