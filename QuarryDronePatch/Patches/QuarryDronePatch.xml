@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationAdd" success="Always">
+		<xpath>/Defs/ThinkTreeDef[defName="VQE_Drone"]/thinkRoot/subNodes/li[pawnKinds/li="VQE_MinerDrone"]/subNodes/li[@Class="VanillaQuestsExpandedDroneFactory.JobGiver_DoWork"]/workgivers</xpath>
+		<value>
+			<li>QRY_MineQuarry</li>
+		</value>
+		<order>Append</order>
+	</Operation>
+</Patch>
