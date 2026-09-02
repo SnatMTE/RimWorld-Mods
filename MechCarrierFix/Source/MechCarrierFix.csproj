@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AssemblyName>MechCarrierFix</AssemblyName>
+    <RootNamespace>MechCarrierFix</RootNamespace>
+    <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GameDir Condition="'$(GameDir)' == ''">L:\SteamLibrary\steamapps\common\RimWorld</GameDir>
+    <HarmonyDir Condition="'$(HarmonyDir)' == ''">L:\SteamLibrary\steamapps\common\RimWorld\Mods\children-and-pregnancy\1.2\Assemblies</HarmonyDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(HarmonyDir)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(GameDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyModAssembly" AfterTargets="Build">
+    <MakeDir Directories="$(MSBuildThisFileDirectory)..\Assemblies" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildThisFileDirectory)..\Assemblies" />
+  </Target>
+</Project>
