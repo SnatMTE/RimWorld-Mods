@@ -21,4 +21,5 @@
 		<li>Ogliss.TheWhiteCrayon.Quarry</li>
 		<li>vanillaquestsexpanded.dronefactory</li>
 	</loadAfter>
+	<description>Allows the Miner Drone from Vanilla Quests Expanded - Drone Factory to work at quarries from Quarry [Adopted]. Works only on newly built drones.</description>
 </ModMetaData>
