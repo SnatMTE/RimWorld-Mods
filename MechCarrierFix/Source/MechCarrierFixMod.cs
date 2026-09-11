@@ -10,9 +10,17 @@ namespace MechCarrierFix
     {
         internal const string HarmonyId = "snat.mechcarrierfix";
 
+        // patched by hand rather than with PatchAll, so a renamed vanilla method costs one log
+        // line instead of a mod that quietly does nothing
         static MechCarrierFixMod()
         {
             MethodInfo target = AccessTools.Method(typeof(ThingOwnerUtility), nameof(ThingOwnerUtility.TryGetInnerInteractableThingOwner));
+            if (target == null)
+            {
+                Log.Error("[Mech Carrier Fix] could not find ThingOwnerUtility.TryGetInnerInteractableThingOwner, patch not applied.");
+                return;
+            }
+
             new Harmony(HarmonyId).Patch(target, postfix: new HarmonyMethod(typeof(MechCarrierFixMod), nameof(Postfix)));
             Log.Message("[Mech Carrier Fix] Harmony patches applied.");
         }
