@@ -6,7 +6,11 @@
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>Fixes hauled resources never reaching mech carrier containers.</description>
+  <description>Fixes hauled resources never reaching mech carrier containers - most visibly, steel delivered to a war queen going into her inventory instead of her carrier, so she can never restock war urchins.
+
+Cause: some mods (for example Rules of Engagement's CompArsenal) add an IThingHolder comp to mechs that reports its own container first, hijacking the vanilla destination resolution for anything hauled into the mech. This mod restores vanilla behavior: when a pawn has a mech carrier, hauling targets the carrier.
+
+Small runtime fix; does not modify any other mod. Requires Harmony.</description>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>
