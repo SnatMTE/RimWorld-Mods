@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>snat.mechsneverdie</packageId>
+  <name>Mechs Never Die</name>
+  <author>Snat</author>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Prevents non-hostile mechanoids from dying. Lethal damage downs them instead, so the vanilla repair systems can put them back together.</description>
+  <modDependencies>
+    <li>
+      <packageId>Ludeon.RimWorld.Biotech</packageId>
+      <displayName>Biotech</displayName>
+    </li>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+    </li>
+  </modDependencies>
+</ModMetaData>

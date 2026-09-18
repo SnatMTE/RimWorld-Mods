@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AssemblyName>MechsNeverDie</AssemblyName>
+    <RootNamespace>MechsNeverDie</RootNamespace>
+    <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">L:\SteamLibrary\steamapps\common\RimWorld\Mods</RimWorldDir>
+    <HarmonyDir Condition="'$(HarmonyDir)' == ''">L:\SteamLibrary\steamapps\common\RimWorld\Mods\children-and-pregnancy\1.2\Assemblies</HarmonyDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(HarmonyDir)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(RimWorldDir)\RimWorldLinux_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyModAssembly" AfterTargets="Build">
+    <MakeDir Directories="$(MSBuildThisFileDirectory)..\..\Assemblies" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildThisFileDirectory)..\..\Assemblies" />
+  </Target>
+</Project>
