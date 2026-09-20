@@ -5,6 +5,7 @@
   <author>Snat</author>
   <supportedVersions>
     <li>1.6</li>
+    <li>1.7</li>
   </supportedVersions>
   <description>Fixes hauled resources never reaching mech carrier containers - most visibly, steel delivered to a war queen going into her inventory instead of her carrier, so she can never restock war urchins.
 
