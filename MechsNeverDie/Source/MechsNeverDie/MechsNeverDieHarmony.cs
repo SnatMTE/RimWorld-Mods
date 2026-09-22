@@ -1,0 +1,60 @@
+using System.Reflection;
+using HarmonyLib;
+using RimWorld;
+using Verse;
+
+namespace MechsNeverDie
+{
+    [StaticConstructorOnStartup]
+    internal static class MechsNeverDieHarmony
+    {
+        // MakeDowned is private, so reflection is the only way in
+        private static readonly MethodInfo MakeDownedMethod = AccessTools.Method(typeof(Pawn_HealthTracker), "MakeDowned");
+
+        static MechsNeverDieHarmony()
+        {
+            new Harmony("matth.mechsneverdie").PatchAll(Assembly.GetExecutingAssembly());
+        }
+
+        // player mechs, colony mechs and anything neutral get the mercy rule. hostile mechs are
+        // excluded, otherwise a raid could never actually end
+        internal static bool ShouldPreventDeath(Pawn pawn)
+        {
+            if (pawn.Dead || !pawn.RaceProps.IsMechanoid)
+            {
+                return false;
+            }
+
+            Faction playerFaction = Faction.OfPlayerSilentFail;
+            return playerFaction == null || !pawn.HostileTo(playerFaction);
+        }
+
+        // killing is a big deal in RimWorld, so hand it to the vanilla downing path and let it
+        // deal with the hediffs, the state and all the bookkeeping nobody wants to copy
+        internal static void DownInsteadOfDying(Pawn pawn, DamageInfo? dinfo, Hediff exactCulprit)
+        {
+            if (pawn.Destroyed || pawn.Downed)
+            {
+                return;
+            }
+
+            MakeDownedMethod.Invoke(pawn.health, new object[] { dinfo, exactCulprit });
+        }
+    }
+
+    // Kill gets called directly by plenty of things that never ask ShouldBeDead first
+    [HarmonyPatch(typeof(Pawn), nameof(Pawn.Kill))]
+    internal static class Patch_Pawn_Kill
+    {
+        private static bool Prefix(Pawn __instance, DamageInfo? dinfo, Hediff exactCulprit)
+        {
+            if (!MechsNeverDieHarmony.ShouldPreventDeath(__instance))
+            {
+                return true;
+            }
+
+            MechsNeverDieHarmony.DownInsteadOfDying(__instance, dinfo, exactCulprit);
+            return false;
+        }
+    }
+}
