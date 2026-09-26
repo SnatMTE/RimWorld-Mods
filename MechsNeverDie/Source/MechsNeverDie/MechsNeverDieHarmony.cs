@@ -42,6 +42,19 @@ namespace MechsNeverDie
         }
     }
 
+    // the health tracker asks this before it pulls the plug, so answer no for our mechs
+    [HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.ShouldBeDead))]
+    internal static class Patch_PawnHealthTracker_ShouldBeDead
+    {
+        private static void Postfix(Pawn_HealthTracker __instance, Pawn ___pawn, ref bool __result)
+        {
+            if (__result && !__instance.Dead && MechsNeverDieHarmony.ShouldPreventDeath(___pawn))
+            {
+                __result = false;
+            }
+        }
+    }
+
     // Kill gets called directly by plenty of things that never ask ShouldBeDead first
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.Kill))]
     internal static class Patch_Pawn_Kill
