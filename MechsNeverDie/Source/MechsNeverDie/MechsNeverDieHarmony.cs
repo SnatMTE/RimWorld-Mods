@@ -70,4 +70,21 @@ namespace MechsNeverDie
             return false;
         }
     }
+
+    // DamageUntilDead is what dev commands and a few vanilla events use, and it does not ask
+    // nicely first either
+    [HarmonyPatch(typeof(HealthUtility), nameof(HealthUtility.DamageUntilDead))]
+    internal static class Patch_HealthUtility_DamageUntilDead
+    {
+        private static bool Prefix(Pawn p, DamageDef damage, ThingDef sourceDef, BodyPartGroupDef bodyGroupDef)
+        {
+            if (!MechsNeverDieHarmony.ShouldPreventDeath(p))
+            {
+                return true;
+            }
+
+            HealthUtility.DamageUntilDowned(p, allowBleedingWounds: true, damage, sourceDef, bodyGroupDef);
+            return false;
+        }
+    }
 }
