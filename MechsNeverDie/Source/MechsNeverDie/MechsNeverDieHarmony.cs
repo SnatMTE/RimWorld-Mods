@@ -25,6 +25,14 @@ namespace MechsNeverDie
                 return false;
             }
 
+            // war urchins run on a non-rechargeable power cell, and vanilla kills them the
+            // moment it runs dry. downing one instead just leaves an unrepairable brick on the
+            // floor, so these die as intended
+            if (pawn.TryGetComp<CompMechPowerCell>() != null)
+            {
+                return false;
+            }
+
             Faction playerFaction = Faction.OfPlayerSilentFail;
             return playerFaction == null || !pawn.HostileTo(playerFaction);
         }
