@@ -11,8 +11,15 @@ namespace MechsNeverDie
         // MakeDowned is private, so reflection is the only way in
         private static readonly MethodInfo MakeDownedMethod = AccessTools.Method(typeof(Pawn_HealthTracker), "MakeDowned");
 
+        // no point registering patches that cannot work, so if the lookup failed, say so and stop
         static MechsNeverDieHarmony()
         {
+            if (MakeDownedMethod == null)
+            {
+                Log.Error("[Mechs Never Die] Pawn_HealthTracker.MakeDowned not found, mechs will die as normal.");
+                return;
+            }
+
             new Harmony("matth.mechsneverdie").PatchAll(Assembly.GetExecutingAssembly());
         }
 
