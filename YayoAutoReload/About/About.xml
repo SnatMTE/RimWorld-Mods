@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Yayo Auto-Reload (Standalone)</name>
+	<author>Snat</author>
+	<packageId>yayo.autoreload.standalone</packageId>
+	<supportedVersions>
+		<li>1.6</li>
+		<li>1.7</li>
+	</supportedVersions>
+	<modDependencies>
+		<li>
+			<packageId>brrainz.harmony</packageId>
+			<displayName>Harmony</displayName>
+		</li>
+		<li>
+			<packageId>Mlie.YayosCombat3</packageId>
+			<displayName>Yayo's Combat 3 (Continued)</displayName>
+		</li>
+		<li>
+			<packageId>Syrus.YayosCombatAddon</packageId>
+			<displayName>Yayo's Combat 3 - Addon</displayName>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>brrainz.harmony</li>
+		<li>Mlie.YayosCombat3</li>
+		<li>Syrus.YayosCombatAddon</li>
+	</loadAfter>
+	<description>Standalone auto-reload fix for Yayo's Combat 3.</description>
+</ModMetaData>
