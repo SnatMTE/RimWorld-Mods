@@ -6,7 +6,7 @@
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>Prevents non-hostile mechanoids from dying. Lethal damage downs them instead, so the vanilla repair systems can put them back together.</description>
+  <description>Prevents non-hostile mechanoids from dying. When lethal damage or a direct kill effect would destroy a non-hostile mech, it is downed instead so the vanilla Biotech repair systems can restore its injuries and missing parts. Hostile mechs still die normally, and so do mechs on a non-rechargeable power cell such as war urchins once that cell runs dry.</description>
   <modDependencies>
     <li>
       <packageId>Ludeon.RimWorld.Biotech</packageId>
