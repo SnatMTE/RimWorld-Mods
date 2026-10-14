@@ -18,7 +18,9 @@ namespace YayoAutoReload
         static PatchBootstrap()
         {
             new Harmony(HarmonyId).PatchAll(typeof(PatchBootstrap).Assembly);
-            Log.Message(LogTag + " Harmony patches applied.");
+
+            // Yayo's reads its settings before this assembly is loaded
+            Patch_YayoCombatCore_ApplySettingsFrom.ApplyCurrentSetting();
         }
     }
 
@@ -50,6 +52,58 @@ namespace YayoAutoReload
             {
                 pawn.jobs.StopAll();
             }
+        }
+    }
+
+    // there is exactly one 500 in the settings window and it is this clamp. if a future version
+    // moves it, the log says so instead of the slider quietly staying capped
+    [HarmonyPatch(typeof(yayoCombat.YayoCombatMod), nameof(yayoCombat.YayoCombatMod.DoSettingsWindowContents))]
+    internal static class Patch_YayoCombatMod_DoSettingsWindowContents
+    {
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            bool replaced = false;
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.opcode == OpCodes.Ldc_I4 && instruction.operand is int value && value == 500)
+                {
+                    instruction.operand = int.MaxValue;
+                    replaced = true;
+                }
+                yield return instruction;
+            }
+
+            if (!replaced)
+            {
+                Log.Warning(PatchBootstrap.LogTag + " could not find the 500% NPC ammo cap in Yayo's settings window, skipped.");
+            }
+        }
+    }
+
+    // Yayo's applies its settings before this assembly is loaded, so the value gets set once here
+    // and once again on every later change
+    [HarmonyPatch(typeof(yayoCombat.YayoCombatCore), nameof(yayoCombat.YayoCombatCore.ApplySettingsFrom))]
+    internal static class Patch_YayoCombatCore_ApplySettingsFrom
+    {
+        [HarmonyPostfix]
+        private static void Postfix(yayoCombat.YayoCombatSettings __0)
+        {
+            Apply(__0);
+        }
+
+        internal static void ApplyCurrentSetting()
+        {
+            Apply(yayoCombat.YayoCombatMod.Instance?.Settings);
+        }
+
+        private static void Apply(yayoCombat.YayoCombatSettings settings)
+        {
+            if (settings == null)
+            {
+                return;
+            }
+            yayoCombat.YayoCombatCore.s_enemyAmmo = UnityEngine.Mathf.Max(0f, settings.enemyAmmo / 100f);
         }
     }
 }
