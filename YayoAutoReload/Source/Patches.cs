@@ -55,6 +55,58 @@ namespace YayoAutoReload
         }
     }
 
+    // safety net for every pawn that never runs the drafted reload ticks, which is most of them.
+    // the interval is spread out over the id so a raid does not all reload on the same frame
+    [HarmonyPatch(typeof(Pawn), "Tick")] // protected override, matched by name at runtime
+    internal static class Patch_Pawn_Tick
+    {
+        private const int MinimumIntervalTicks = 120;
+        private const uint IntervalVariationTicks = 61;
+
+        [HarmonyPostfix]
+        private static void Postfix(Pawn __instance)
+        {
+            if (!yayoCombat.YayoCombatCore.ammo
+                || (__instance.Faction == Faction.OfPlayer && __instance.RaceProps.Humanlike)
+                || !__instance.Spawned)
+            {
+                return;
+            }
+
+            int intervalTicks = MinimumIntervalTicks + (int)((uint)__instance.thingIDNumber % IntervalVariationTicks);
+            if (!__instance.IsHashIntervalTick(intervalTicks)
+                || !__instance.IsCapableOfReloading()
+                || ReloadRetryRegistry.IsReloadJob(__instance.CurJobDef))
+            {
+                return;
+            }
+
+            Thing primary = __instance.equipment.Primary;
+            CompApparelReloadable comp = primary?.TryGetComp<CompApparelReloadable>();
+            if (comp == null || !AmmoUtility.IsAmmo(comp.AmmoDef, false))
+            {
+                return;
+            }
+
+            bool retryingPartialReload = ReloadRetryRegistry.IsPending(__instance, primary) && comp.RemainingCharges < comp.MaxCharges;
+            if (comp.RemainingCharges > 0 && !retryingPartialReload)
+            {
+                return;
+            }
+
+            if (__instance.CountAmmoInInventory(comp) >= comp.MinAmmoNeededChecked())
+            {
+                if (ReloadUtility.TryReloadFromInventory(__instance, new[] { primary }, false))
+                {
+                    ReloadRetryRegistry.Clear(__instance, primary);
+                }
+            }
+            else
+            {
+                VirtualRefillUtility.TryStart(comp);
+            }
+        }
+    }
     // there is exactly one 500 in the settings window and it is this clamp. if a future version
     // moves it, the log says so instead of the slider quietly staying capped
     [HarmonyPatch(typeof(yayoCombat.YayoCombatMod), nameof(yayoCombat.YayoCombatMod.DoSettingsWindowContents))]
