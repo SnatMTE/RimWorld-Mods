@@ -107,6 +107,17 @@ namespace YayoAutoReload
             }
         }
     }
+    // the job tracker is the only place that knows a reload ended badly, so this is where half
+    // finished reloads get remembered
+    [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.EndCurrentJob))]
+    internal static class Patch_Pawn_JobTracker_EndCurrentJob
+    {
+        [HarmonyPrefix]
+        private static void Prefix(Pawn ___pawn, Job ___curJob, JobCondition __0)
+        {
+            ReloadRetryRegistry.ObserveJobEnd(___pawn, ___curJob, __0);
+        }
+    }
     // there is exactly one 500 in the settings window and it is this clamp. if a future version
     // moves it, the log says so instead of the slider quietly staying capped
     [HarmonyPatch(typeof(yayoCombat.YayoCombatMod), nameof(yayoCombat.YayoCombatMod.DoSettingsWindowContents))]

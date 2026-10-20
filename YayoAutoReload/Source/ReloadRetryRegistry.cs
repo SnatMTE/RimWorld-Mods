@@ -35,6 +35,32 @@ namespace YayoAutoReload
             }
         }
 
+        // called for every job that ends in the game, so bail out fast on anything that is not a
+        // reload. a reload that finished properly clears the entry, anything else marks it
+        internal static void ObserveJobEnd(Pawn pawn, Job job, JobCondition condition)
+        {
+            if (job == null || !IsReloadJob(job.def))
+            {
+                return;
+            }
+
+            Thing weapon = job.targetA.Thing;
+            CompApparelReloadable comp = weapon?.TryGetComp<CompApparelReloadable>();
+            if (comp == null)
+            {
+                return;
+            }
+
+            if (comp.RemainingCharges >= comp.MaxCharges)
+            {
+                Clear(pawn, weapon);
+            }
+            else if (condition != JobCondition.Succeeded)
+            {
+                Mark(pawn, weapon);
+            }
+        }
+
         // matched by defName because the Addon and vanilla each have their own idea of what a
         // reload job is called, and new ones turn up between versions
         internal static bool IsReloadJob(JobDef jobDef)
