@@ -118,6 +118,28 @@ namespace YayoAutoReload
             ReloadRetryRegistry.ObserveJobEnd(___pawn, ___curJob, __0);
         }
     }
+    // returning true means the virtual refill took over. everything else falls through to the
+    // Addon's own behaviour, which is exactly what we want
+    [HarmonyPatch(typeof(ReloadUtility), nameof(ReloadUtility.TryAutoReloadSingle))]
+    internal static class Patch_ReloadUtility_TryAutoReloadSingle
+    {
+        [HarmonyPrefix]
+        private static bool Prefix(CompApparelReloadable __0, ref bool __result)
+        {
+            return !VirtualRefillUtility.TryHandleSingle(__0, ref __result);
+        }
+    }
+
+    // same deal for the reload-everything call, first qualifying weapon wins
+    [HarmonyPatch(typeof(ReloadUtility), nameof(ReloadUtility.TryAutoReloadAll))]
+    internal static class Patch_ReloadUtility_TryAutoReloadAll
+    {
+        [HarmonyPrefix]
+        private static bool Prefix(Pawn __0, ref bool __result)
+        {
+            return !VirtualRefillUtility.TryHandleAll(__0, ref __result);
+        }
+    }
     // there is exactly one 500 in the settings window and it is this clamp. if a future version
     // moves it, the log says so instead of the slider quietly staying capped
     [HarmonyPatch(typeof(yayoCombat.YayoCombatMod), nameof(yayoCombat.YayoCombatMod.DoSettingsWindowContents))]

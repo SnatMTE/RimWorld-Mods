@@ -73,7 +73,8 @@ namespace YayoAutoReload
             string defName = jobDef.defName;
             return defName == "YCA_ReloadFromInventory"
                 || defName == "YCA_ReloadFromSurrounding"
-                || defName == "Reload";
+                || defName == "Reload"
+                || VirtualRefillUtility.IsVirtualReloadJob(jobDef);
         }
     }
 }
