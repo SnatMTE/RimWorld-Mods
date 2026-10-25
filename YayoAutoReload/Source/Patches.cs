@@ -15,9 +15,29 @@ namespace YayoAutoReload
         public const string HarmonyId = "local.yayoautoreload";
         public const string LogTag = "[YayoAutoReload]";
 
+        // one bad patch class takes down PatchAll for the whole assembly, which is a lovely way
+        // to lose four patches over one missing method, so they go on one at a time
         static PatchBootstrap()
         {
-            new Harmony(HarmonyId).PatchAll(typeof(PatchBootstrap).Assembly);
+            VirtualRefillJobDefOf.Initialize();
+
+            Harmony harmony = new Harmony(HarmonyId);
+            foreach (Type type in typeof(PatchBootstrap).Assembly.GetTypes())
+            {
+                if (type.GetCustomAttributes(typeof(HarmonyPatch), true).Length == 0)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    harmony.CreateClassProcessor(type).Patch();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(LogTag + " failed to apply patch class " + type.FullName + ": " + ex);
+                }
+            }
 
             // Yayo's reads its settings before this assembly is loaded
             Patch_YayoCombatCore_ApplySettingsFrom.ApplyCurrentSetting();
@@ -107,6 +127,7 @@ namespace YayoAutoReload
             }
         }
     }
+
     // the job tracker is the only place that knows a reload ended badly, so this is where half
     // finished reloads get remembered
     [HarmonyPatch(typeof(Pawn_JobTracker), nameof(Pawn_JobTracker.EndCurrentJob))]
@@ -118,6 +139,7 @@ namespace YayoAutoReload
             ReloadRetryRegistry.ObserveJobEnd(___pawn, ___curJob, __0);
         }
     }
+
     // returning true means the virtual refill took over. everything else falls through to the
     // Addon's own behaviour, which is exactly what we want
     [HarmonyPatch(typeof(ReloadUtility), nameof(ReloadUtility.TryAutoReloadSingle))]
@@ -140,6 +162,7 @@ namespace YayoAutoReload
             return !VirtualRefillUtility.TryHandleAll(__0, ref __result);
         }
     }
+
     // there is exactly one 500 in the settings window and it is this clamp. if a future version
     // moves it, the log says so instead of the slider quietly staying capped
     [HarmonyPatch(typeof(yayoCombat.YayoCombatMod), nameof(yayoCombat.YayoCombatMod.DoSettingsWindowContents))]
