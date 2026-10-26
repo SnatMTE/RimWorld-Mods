@@ -26,5 +26,7 @@
 		<li>Mlie.YayosCombat3</li>
 		<li>Syrus.YayosCombatAddon</li>
 	</loadAfter>
-	<description>Standalone auto-reload fix for Yayo's Combat 3.</description>
+	<description>Standalone auto-reload fix for Yayo's Combat 3, replacing the broken "Auto Reload Regression Fix" mod (disable that one if both are enabled, it fails to apply its patches).
+
+Restores the Addon 1.6.10 auto-reload trigger (reload right after the last round is fired), adds a periodic empty-weapon reload retry for undrafted pawns including mechs, and routes mech refills through a virtual reload that spawns no physical ammo. Does not modify any other mod. Load after Harmony, Yayo's Combat 3 (Continued), and the Addon.</description>
 </ModMetaData>
